@@ -1,0 +1,32 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/auth/:path*",
+      "destination": "https://cineverse-auth-service.onrender.com"
+    },
+    {
+      "source": "/api/users/:path*",
+      "destination": "https://cineverse-auth-service.onrender.com"
+    },
+    {
+      "source": "/api/movies/:path*",
+      "destination": "https://cineverse-movie-service.onrender.com"
+    },
+    {
+      "source": "/api/bookings/:path*",
+      "destination": "https://cineverse-movie-service.onrender.com"
+    },
+    {
+      "source": "/api/shows/:path*",
+      "destination": "https://cineverse-movie-service.onrender.com"
+    },
+    {
+      "source": "/api/tickets/:path*",
+      "destination": "https://cineverse-movie-service.onrender.com"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

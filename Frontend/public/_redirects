@@ -1,0 +1,7 @@
+/api/auth/*  https://auth-service-placeholder.onrender.com/api/auth/:splat  200
+/api/users/*  https://auth-service-placeholder.onrender.com/api/users/:splat  200
+/api/movies/*  https://movie-service-placeholder.onrender.com/api/movies/:splat  200
+/api/bookings/*  https://movie-service-placeholder.onrender.com/api/bookings/:splat  200
+/api/shows/*  https://movie-service-placeholder.onrender.com/api/shows/:splat  200
+/api/tickets/*  https://movie-service-placeholder.onrender.com/api/tickets/:splat  200
+/*    /index.html   200

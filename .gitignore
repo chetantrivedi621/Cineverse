@@ -1,0 +1,73 @@
+# ===========================
+# Database Files (Large Files)
+# ===========================
+**/mongodata/
+**/pgdata/
+**/pgsql/
+Backend/pglog.txt
+
+# ===========================
+# Java / Maven Build Output
+# ===========================
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+
+# ===========================
+# Maven Wrapper
+# ===========================
+!**/mvnw
+!**/mvnw.cmd
+!**/.mvn/wrapper/maven-wrapper.jar
+
+# ===========================
+# Spring Boot
+# ===========================
+*.log
+application-local.properties
+application-local.yml
+
+# ===========================
+# Node / Frontend
+# ===========================
+node_modules/
+**/node_modules/
+Frontend/dist/
+Frontend/.env
+Frontend/.env.local
+Frontend/.env.production
+.pnp
+.pnp.js
+
+# ===========================
+# Environment & Secrets
+# ===========================
+.env
+.env.*
+*.env
+!.env.example
+
+# ===========================
+# IDE / Editor Files
+# ===========================
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ===========================
+# OS Generated Files
+# ===========================
+.DS_Store
+Thumbs.db
+desktop.ini
