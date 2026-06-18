@@ -1,24 +1,48 @@
 {
   "rewrites": [
     {
+      "source": "/api/auth",
+      "destination": "https://cineverse-auth-service-baz5.onrender.com/api/auth"
+    },
+    {
       "source": "/api/auth/:path*",
       "destination": "https://cineverse-auth-service-baz5.onrender.com/api/auth/:path*"
+    },
+    {
+      "source": "/api/users",
+      "destination": "https://cineverse-auth-service-baz5.onrender.com/api/users"
     },
     {
       "source": "/api/users/:path*",
       "destination": "https://cineverse-auth-service-baz5.onrender.com/api/users/:path*"
     },
     {
+      "source": "/api/movies",
+      "destination": "https://cineverse-movie-service-h3x8.onrender.com/api/movies"
+    },
+    {
       "source": "/api/movies/:path*",
       "destination": "https://cineverse-movie-service-h3x8.onrender.com/api/movies/:path*"
+    },
+    {
+      "source": "/api/bookings",
+      "destination": "https://cineverse-movie-service-h3x8.onrender.com/api/bookings"
     },
     {
       "source": "/api/bookings/:path*",
       "destination": "https://cineverse-movie-service-h3x8.onrender.com/api/bookings/:path*"
     },
     {
+      "source": "/api/shows",
+      "destination": "https://cineverse-auth-service-baz5.onrender.com/api/shows"
+    },
+    {
       "source": "/api/shows/:path*",
       "destination": "https://cineverse-auth-service-baz5.onrender.com/api/shows/:path*"
+    },
+    {
+      "source": "/api/tickets",
+      "destination": "https://cineverse-auth-service-baz5.onrender.com/api/tickets"
     },
     {
       "source": "/api/tickets/:path*",
