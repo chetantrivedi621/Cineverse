@@ -1,0 +1,92 @@
+name: CineVerse CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # 1. Build Frontend (React + Vite)
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: './Frontend/package-lock.json'
+
+      - name: Install Dependencies
+        working-directory: ./Frontend
+        run: npm ci
+
+      - name: Build Frontend
+        working-directory: ./Frontend
+        run: npm run build
+
+  # 2. Build Auth Service (Spring Boot)
+  build-auth-service:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build Auth Service
+        working-directory: ./Backend/auth-service
+        run: |
+          chmod +x mvnw
+          ./mvnw clean package -DskipTests
+
+  # 3. Build Movie Service (Spring Boot)
+  build-movie-service:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build Movie Service
+        working-directory: ./Backend/movie-service
+        run: |
+          chmod +x mvnw
+          ./mvnw clean package -DskipTests
+
+  # 4. Build Review Service (Spring Boot)
+  build-review-service:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build Review Service
+        working-directory: ./Backend/review-service
+        # Note: If review-service is a node service or maven service, we build it accordingly.
+        # Since it is a maven service, we run mvnw.
+        run: |
+          if [ -f mvnw ]; then
+            chmod +x mvnw
+            ./mvnw clean package -DskipTests
+          else
+            echo "No Maven wrapper found in review-service, skipping build."
+          fi
