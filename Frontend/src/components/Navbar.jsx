@@ -280,7 +280,7 @@ function Navbar() {
                   </button>
                 </div>
               ) : (
-                <button className="navbar-btn-primary" onClick={() => navigate("/")}>
+                <button className="navbar-btn-primary" onClick={() => navigate("/login")}>
                   Sign In
                 </button>
               )}
@@ -350,7 +350,7 @@ function Navbar() {
                     Sign Out
                   </button>
                 ) : (
-                  <button className="drawer-logout-btn" onClick={() => { setIsDrawerOpen(false); navigate("/"); }}>
+                  <button className="drawer-logout-btn" onClick={() => { setIsDrawerOpen(false); navigate("/login"); }}>
                     Sign In
                   </button>
                 )}
