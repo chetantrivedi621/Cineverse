@@ -307,38 +307,9 @@ function Navbar() {
                 Movies
               </Link>
               
-              {location.pathname === "/dashboard" && role === "user" ? (
-                <>
-                  <button 
-                    className={`nav-link ${activeUserTab === "home" ? "active" : ""}`}
-                    onClick={() => handleTabClick("home")}
-                  >
-                    Spotlight
-                  </button>
-                  <button 
-                    className={`nav-link ${activeUserTab === "bookings" ? "active" : ""}`}
-                    onClick={() => handleTabClick("bookings")}
-                  >
-                    My Bookings ({bookingsCount})
-                  </button>
-                  <button 
-                    className={`nav-link ${activeUserTab === "watchlist" ? "active" : ""}`}
-                    onClick={() => handleTabClick("watchlist")}
-                  >
-                    Watchlist ({watchlistCount})
-                  </button>
-                  <button 
-                    className={`nav-link ${activeUserTab === "reviews" ? "active" : ""}`}
-                    onClick={() => handleTabClick("reviews")}
-                  >
-                    Movie Reviews
-                  </button>
-                </>
-              ) : (
-                <Link to="/dashboard" className={location.pathname === "/dashboard" ? "nav-link active" : "nav-link"}>
-                  Dashboard
-                </Link>
-              )}
+              <Link to="/dashboard" className={location.pathname === "/dashboard" ? "nav-link active" : "nav-link"}>
+                Dashboard
+              </Link>
             </div>
           </div>
         </div>

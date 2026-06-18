@@ -35,6 +35,7 @@ function Dashboard() {
   };
   const [activeOwnerTab, setActiveOwnerTab] = useState("overview"); // overview, movies, shows, bookings
   const [activeAdminTab, setActiveAdminTab] = useState("overview"); // overview, users, approvals, reviews
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   // General state
   const [movies, setMovies] = useState([]);
@@ -453,15 +454,15 @@ function Dashboard() {
 
   const defaultSpotlight = {
     id: "",
-    title: "Dune: Part Two",
-    genre: "Sci-Fi, Action, Adventure",
-    rating: 8.6,
-    duration: "166 Min",
-    description: "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the universe, he endeavors to prevent a terrible future only he can foresee.",
-    imageUrl: "https://image.tmdb.org/t/p/w1280/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
+    title: "Oppenheimer",
+    genre: "Drama, Historical, Period",
+    rating: 8.4,
+    duration: "180 Min",
+    description: "The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb, which changed the course of history.",
+    imageUrl: "https://image.tmdb.org/t/p/w1280/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
   };
 
-  const spotlightMovie = movies.find(m => m.title === "Dune: Part Two") || movies.find(m => m.title === "Oppenheimer") || movies[0] || defaultSpotlight;
+  const spotlightMovie = movies.find(m => m.title === "Oppenheimer") || movies.find(m => m.title === "Dune: Part Two") || movies[0] || defaultSpotlight;
 
   return (
     <div className="dashboard-page">
@@ -470,288 +471,371 @@ function Dashboard() {
       {/* ================= USER PANEL ================= */}
       {role === "user" && (
         <div className="user-dashboard-wrapper">
-          
-          {/* Tabs render handled directly by parent Navbar component to combine rows */}
+          <div className={`user-sidebar-nav ${isSidebarCollapsed ? "collapsed" : ""}`}>
+            {/* Collapse toggle button */}
+            <button 
+              className="sidebar-toggle-btn" 
+              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            >
+              {isSidebarCollapsed ? "→" : "←"}
+            </button>
 
-          {activeUserTab === "home" && (
-            <>
-              {/* Cinematic Spotlight Banner */}
-              <div className="hero-section" style={{ backgroundImage: `url(${spotlightMovie.imageUrl})` }}>
-                <div className="hero-banner-overlay"></div>
-                <div className="hero-content">
-                  <span className="hero-badge">SPOTLIGHT OF THE MONTH</span>
-                  <h1 className="hero-title">{spotlightMovie.title}</h1>
-                  <div className="hero-meta-tags">
-                    {spotlightMovie.genre.split(",").map((g, idx) => (
-                      <span key={idx} className="meta-tag">{g.trim()}</span>
-                    ))}
-                    <span className="meta-tag rating">★ {spotlightMovie.rating ? spotlightMovie.rating.toFixed(1) : "N/A"} Rating</span>
-                    {spotlightMovie.duration && <span className="meta-tag">{spotlightMovie.duration}</span>}
-                  </div>
-                  <p className="hero-desc">
-                    {spotlightMovie.description}
-                  </p>
-                  <div className="hero-buttons">
-                    <button className="btn-hero-primary" onClick={() => navigate("/booking", { state: { movieId: spotlightMovie.id } })}>
-                      Book Tickets Now
-                    </button>
-                    <button className="btn-hero-secondary" onClick={() => navigate("/movies")}>
-                      Explore All Movies
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="dashboard-container-layout">
-                {/* Trending Section */}
-                <section className="trending-section">
-                  <div className="section-header">
-                    <h2>Now Showing & Trending</h2>
-                    <p className="section-subtitle">Top rated movies in theatres today</p>
-                  </div>
-                  <div className="movies-grid">
-                    {trendingMovies.map((movie) => (
-                      <div key={movie.id} className="movie-card-container">
-                        <MovieCard movie={movie} />
-                        <button 
-                          className={`watchlist-btn-overlay ${watchlist.some(m => m.id === movie.id) ? "in-list" : ""}`}
-                          onClick={() => toggleWatchlist(movie)}
-                          title={watchlist.some(m => m.id === movie.id) ? "Remove from watchlist" : "Add to watchlist"}
-                        >
-                          {watchlist.some(m => m.id === movie.id) ? "★" : "☆"}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              </div>
-            </>
-          )}
-
-          {activeUserTab === "bookings" && (
-            <div className="dashboard-container-layout">
-              <section className="bookings-section">
-                <div className="section-header">
-                  <h2>Your Ticket Bookings</h2>
-                  <p className="section-subtitle">Real-time status of your reserved cinema seats</p>
-                </div>
-
-                {bookings.length === 0 ? (
-                  <div className="empty-bookings-card">
-                    <div className="empty-bookings-icon">★</div>
-                    <p>You don't have any bookings yet.</p>
-                    <button className="empty-btn" onClick={() => navigate("/booking")}>
-                      Reserve a Seat Now
-                    </button>
-                  </div>
-                ) : (
-                  <div className="user-tickets-grid">
-                    {(() => {
-                      const groupBookings = (list) => {
-                        const groups = [];
-                        list.forEach((b) => {
-                          const match = groups.find((g) => {
-                            const timeDiff = Math.abs(new Date(g.bookedAt).getTime() - new Date(b.bookedAt).getTime());
-                            return g.movieTitle === b.movieTitle &&
-                                   g.showTime === b.showTime &&
-                                   g.cinema === b.cinema &&
-                                   g.city === b.city &&
-                                   timeDiff < 15000;
-                          });
-                          if (match) {
-                            match.seats.push(b.seatNumber);
-                            match.ids.push(b.id);
-                            match.totalPrice += b.price;
-                          } else {
-                            groups.push({
-                              ...b,
-                              seats: [b.seatNumber],
-                              ids: [b.id],
-                              totalPrice: b.price
-                            });
-                          }
-                        });
-                        return groups;
-                      };
-
-                      return groupBookings(bookings).map((booking) => {
-                        const movieObj = movies.find(m => m.title === booking.movieTitle);
-                        const sortedSeats = [...booking.seats].sort((x, y) => 
-                          x.localeCompare(y, undefined, { numeric: true, sensitivity: "base" })
-                        );
-                        const seatCategory = booking.seats[0].startsWith("A") ? "EXECUTIVE" : booking.seats[0].startsWith("B") ? "PREMIUM" : "CLASSIC";
-                        
-                        return (
-                          <div key={booking.ids[0]} className="custom-ticket-card">
-                            {/* Top Section */}
-                            <div className="ticket-top-section">
-                              <div className="ticket-poster-wrapper">
-                                <img 
-                                  src={movieObj?.imageUrl || "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=2070"} 
-                                  alt={booking.movieTitle} 
-                                  className="ticket-poster" 
-                                />
-                              </div>
-                              <div className="ticket-movie-details">
-                                <h3 className="ticket-movie-title">{booking.movieTitle}</h3>
-                                <p className="ticket-movie-genre">{movieObj?.genre || "Action, Sci-Fi"}</p>
-                                 <p className="ticket-show-datetime">
-                                   {(() => {
-                                     // Calculate actual show date: bookedAt date + dayOffset
-                                     const showDate = new Date(booking.bookedAt);
-                                     if (booking.dayOffset != null) {
-                                       showDate.setDate(showDate.getDate() + booking.dayOffset);
-                                     }
-                                     return showDate.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
-                                   })()} | {booking.showTime}
-                                 </p>
-                                <p className="ticket-cinema-name">{booking.cinema || "Multiplex Cinema"}</p>
-                              </div>
-                              <div className="ticket-m-label">
-                                <span>M-Ticket</span>
-                              </div>
-                            </div>
-
-                            {/* Middle Bar */}
-                            <div className="ticket-middle-bar">
-                              <span>Tap for support, details & more actions</span>
-                            </div>
-
-                            {/* Bottom Section */}
-                            <div className="ticket-bottom-section">
-                              <div className="ticket-bottom-left">
-                                <div className="ticket-brand-logo">CineVerse</div>
-                              </div>
-                              <div className="ticket-bottom-right">
-                                <div className="ticket-info-item">
-                                  <span className="ticket-info-label">{booking.seats.length} Ticket(s)</span>
-                                </div>
-                                <div className="ticket-info-item">
-                                  <span className="ticket-info-val-large">AUDI 2</span>
-                                </div>
-                                <div className="ticket-info-item">
-                                  <span className="ticket-info-seat">
-                                    {seatCategory} - {sortedSeats.join(", ")}
-                                  </span>
-                                </div>
-                                <div className="ticket-info-item booking-id-row">
-                                  <span>BOOKING ID: <strong>{booking.ids[0].substring(0, 8).toUpperCase()}</strong></span>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Footer Bar */}
-                            <div className="ticket-footer-bar">
-                              <span>Cancellation policy applies to this venue</span>
-                            </div>
-                          </div>
-                        );
-                      });
-                    })()}
-                  </div>
-                )}
-              </section>
+            <div className="sidebar-brand">
+              {!isSidebarCollapsed ? (
+                <>
+                  <span>User Menu</span>
+                  <span className="live-dot" title="User Session Active"></span>
+                </>
+              ) : (
+                <span className="live-dot" style={{ margin: 0 }} title="User Session Active"></span>
+              )}
             </div>
-          )}
 
-          {activeUserTab === "watchlist" && (
-            <div className="dashboard-container-layout">
-              <section className="trending-section">
-                <div className="section-header">
-                  <h2>My Watchlist</h2>
-                  <p className="section-subtitle">Movies you plan to watch soon</p>
-                </div>
+            <button 
+              className={`sidebar-btn ${activeUserTab === "home" ? "active" : ""}`}
+              onClick={() => setActiveUserTab("home")}
+              title="Spotlight"
+            >
+              <svg className="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              {!isSidebarCollapsed && <span className="sidebar-label">Spotlight</span>}
+            </button>
 
-                {watchlist.length === 0 ? (
-                  <div className="empty-bookings-card">
-                    <div className="empty-bookings-icon">★</div>
-                    <p>Your watchlist is empty.</p>
-                    <button className="empty-btn" onClick={() => navigate("/movies")}>
-                      Browse Movies
-                    </button>
-                  </div>
-                ) : (
-                  <div className="movies-grid">
-                    {watchlist.map((movie) => (
-                      <div key={movie.id} className="movie-card-container">
-                        <MovieCard movie={movie} />
-                        <button 
-                          className="watchlist-btn-overlay in-list"
-                          onClick={() => toggleWatchlist(movie)}
-                          title="Remove from watchlist"
-                        >
-                          ★
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </section>
-            </div>
-          )}
+            <button 
+              className={`sidebar-btn ${activeUserTab === "bookings" ? "active" : ""}`}
+              onClick={() => setActiveUserTab("bookings")}
+              title="My Bookings"
+            >
+              <svg className="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="16" rx="2" />
+                <path d="M12 4v16" strokeDasharray="3 3" />
+                <path d="M3 9h3a2 2 0 0 1 0 4H3" />
+                <path d="M21 9h-3a2 2 0 0 0 0 4h3" />
+              </svg>
+              {!isSidebarCollapsed && (
+                <>
+                  <span className="sidebar-label">My Bookings</span>
+                  <span className="sidebar-badge">{bookings.length}</span>
+                </>
+              )}
+              {isSidebarCollapsed && bookings.length > 0 && (
+                <span className="sidebar-badge collapsed">{bookings.length}</span>
+              )}
+            </button>
 
-          {activeUserTab === "reviews" && (
-            <div className="dashboard-container-layout">
-              <section className="reviews-section-panel">
-                <div className="section-header">
-                  <h2>Movie Reviews & Ratings</h2>
-                  <p className="section-subtitle">Share your cinematic experiences with others</p>
-                </div>
+            <button 
+              className={`sidebar-btn ${activeUserTab === "watchlist" ? "active" : ""}`}
+              onClick={() => setActiveUserTab("watchlist")}
+              title="Watchlist"
+            >
+              <svg className="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+              {!isSidebarCollapsed && (
+                <>
+                  <span className="sidebar-label">Watchlist</span>
+                  <span className="sidebar-badge">{watchlist.length}</span>
+                </>
+              )}
+              {isSidebarCollapsed && watchlist.length > 0 && (
+                <span className="sidebar-badge collapsed">{watchlist.length}</span>
+              )}
+            </button>
 
-                <div className="reviews-dual-layout">
-                  {/* Left Column: Write Review */}
-                  <div className="write-review-card">
-                    <h3>Write a Review</h3>
-                    <form onSubmit={(e) => {
-                      const fd = new FormData(e.currentTarget);
-                      handleAddReview(e, fd.get("movieTitle"), fd.get("rating"), fd.get("comment"));
-                      e.currentTarget.reset();
-                    }}>
-                      <div className="form-group">
-                        <label>Select Movie</label>
-                        <select name="movieTitle" required className="form-select-control">
-                          {movies.map(m => <option key={m.id} value={m.title}>{m.title}</option>)}
-                        </select>
-                      </div>
-                      <div className="form-group">
-                        <label>Rating (Out of 5)</label>
-                        <select name="rating" required className="form-select-control">
-                          <option value="5">★★★★★ (Excellent)</option>
-                          <option value="4">★★★★ (Great)</option>
-                          <option value="3">★★★ (Average)</option>
-                          <option value="2">★★ (Poor)</option>
-                          <option value="1">★ (Terrible)</option>
-                        </select>
-                      </div>
-                      <div className="form-group">
-                        <label>Comments</label>
-                        <textarea name="comment" rows="4" placeholder="What did you think of the cinematography, story, music?" required className="form-textarea-control"></textarea>
-                      </div>
-                      <button type="submit" className="btn-submit-review">Publish Review</button>
-                    </form>
-                  </div>
+            <button 
+              className={`sidebar-btn ${activeUserTab === "reviews" ? "active" : ""}`}
+              onClick={() => setActiveUserTab("reviews")}
+              title="Movie Reviews"
+            >
+              <svg className="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              {!isSidebarCollapsed && <span className="sidebar-label">Movie Reviews</span>}
+            </button>
+          </div>
 
-                  {/* Right Column: Public Reviews list */}
-                  <div className="public-reviews-card">
-                    <h3>Recent User Reviews</h3>
-                    <div className="reviews-feed-container">
-                      {reviews.filter(r => !r.isSpam).map(rev => (
-                        <div key={rev.id} className="review-feed-item">
-                          <div className="review-feed-header">
-                            <span className="review-author">{rev.author}</span>
-                            <span className="review-rating">{"★".repeat(rev.rating)}</span>
-                          </div>
-                          <h4 className="review-movie-target">on {rev.movieTitle}</h4>
-                          <p className="review-comment">"{rev.comment}"</p>
-                        </div>
+          <div className="user-main-content">
+            {activeUserTab === "home" && (
+              <>
+                {/* Cinematic Spotlight Banner */}
+                <div className="hero-section" style={{ backgroundImage: `url(${spotlightMovie.imageUrl})` }}>
+                  <div className="hero-banner-overlay"></div>
+                  <div className="hero-content">
+                    <span className="hero-badge">SPOTLIGHT OF THE MONTH</span>
+                    <h1 className="hero-title">{spotlightMovie.title}</h1>
+                    <div className="hero-meta-tags">
+                      {spotlightMovie.genre.split(",").map((g, idx) => (
+                        <span key={idx} className="meta-tag">{g.trim()}</span>
                       ))}
+                      <span className="meta-tag rating">★ {spotlightMovie.rating ? spotlightMovie.rating.toFixed(1) : "N/A"} Rating</span>
+                      {spotlightMovie.duration && <span className="meta-tag">{spotlightMovie.duration}</span>}
+                    </div>
+                    <p className="hero-desc">
+                      {spotlightMovie.description}
+                    </p>
+                    <div className="hero-buttons">
+                      <button className="btn-hero-primary" onClick={() => navigate("/booking", { state: { movieId: spotlightMovie.id } })}>
+                        Book Tickets Now
+                      </button>
+                      <button className="btn-hero-secondary" onClick={() => navigate("/movies")}>
+                        Explore All Movies
+                      </button>
                     </div>
                   </div>
                 </div>
-              </section>
-            </div>
-          )}
 
+                <div className="dashboard-container-layout">
+                  {/* Trending Section */}
+                  <section className="trending-section">
+                    <div className="section-header">
+                      <h2>Now Showing & Trending</h2>
+                      <p className="section-subtitle">Top rated movies in theatres today</p>
+                    </div>
+                    <div className="movies-grid">
+                      {trendingMovies.map((movie) => (
+                        <div key={movie.id} className="movie-card-container">
+                          <MovieCard movie={movie} />
+                          <button 
+                            className={`watchlist-btn-overlay ${watchlist.some(m => m.id === movie.id) ? "in-list" : ""}`}
+                            onClick={() => toggleWatchlist(movie)}
+                            title={watchlist.some(m => m.id === movie.id) ? "Remove from watchlist" : "Add to watchlist"}
+                          >
+                            {watchlist.some(m => m.id === movie.id) ? "★" : "☆"}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                </div>
+              </>
+            )}
+
+            {activeUserTab === "bookings" && (
+              <div className="dashboard-container-layout">
+                <section className="bookings-section">
+                  <div className="section-header">
+                    <h2>Your Ticket Bookings</h2>
+                    <p className="section-subtitle">Real-time status of your reserved cinema seats</p>
+                  </div>
+
+                  {bookings.length === 0 ? (
+                    <div className="empty-bookings-card">
+                      <div className="empty-bookings-icon">★</div>
+                      <p>You don't have any bookings yet.</p>
+                      <button className="empty-btn" onClick={() => navigate("/booking")}>
+                        Reserve a Seat Now
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="user-tickets-grid">
+                      {(() => {
+                        const groupBookings = (list) => {
+                          const groups = [];
+                          list.forEach((b) => {
+                            const match = groups.find((g) => {
+                              const timeDiff = Math.abs(new Date(g.bookedAt).getTime() - new Date(b.bookedAt).getTime());
+                              return g.movieTitle === b.movieTitle &&
+                                     g.showTime === b.showTime &&
+                                     g.cinema === b.cinema &&
+                                     g.city === b.city &&
+                                     timeDiff < 15000;
+                            });
+                            if (match) {
+                              match.seats.push(b.seatNumber);
+                              match.ids.push(b.id);
+                              match.totalPrice += b.price;
+                            } else {
+                              groups.push({
+                                ...b,
+                                seats: [b.seatNumber],
+                                ids: [b.id],
+                                totalPrice: b.price
+                              });
+                            }
+                          });
+                          return groups;
+                        };
+
+                        return groupBookings(bookings).map((booking) => {
+                          const movieObj = movies.find(m => m.title === booking.movieTitle);
+                          const sortedSeats = [...booking.seats].sort((x, y) => 
+                            x.localeCompare(y, undefined, { numeric: true, sensitivity: "base" })
+                          );
+                          const seatCategory = booking.seats[0].startsWith("A") ? "EXECUTIVE" : booking.seats[0].startsWith("B") ? "PREMIUM" : "CLASSIC";
+                          
+                          return (
+                            <div key={booking.ids[0]} className="custom-ticket-card">
+                              {/* Top Section */}
+                              <div className="ticket-top-section">
+                                <div className="ticket-poster-wrapper">
+                                  <img 
+                                    src={movieObj?.imageUrl || "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=2070"} 
+                                    alt={booking.movieTitle} 
+                                    className="ticket-poster" 
+                                  />
+                                </div>
+                                <div className="ticket-movie-details">
+                                  <h3 className="ticket-movie-title">{booking.movieTitle}</h3>
+                                  <p className="ticket-movie-genre">{movieObj?.genre || "Action, Sci-Fi"}</p>
+                                   <p className="ticket-show-datetime">
+                                     {(() => {
+                                       // Calculate actual show date: bookedAt date + dayOffset
+                                       const showDate = new Date(booking.bookedAt);
+                                       if (booking.dayOffset != null) {
+                                         showDate.setDate(showDate.getDate() + booking.dayOffset);
+                                       }
+                                       return showDate.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
+                                     })()} | {booking.showTime}
+                                   </p>
+                                  <p className="ticket-cinema-name">{booking.cinema || "Multiplex Cinema"}</p>
+                                </div>
+                                <div className="ticket-m-label">
+                                  <span>M-Ticket</span>
+                                </div>
+                              </div>
+
+                              {/* Middle Bar */}
+                              <div className="ticket-middle-bar">
+                                <span>Tap for support, details & more actions</span>
+                              </div>
+
+                              {/* Bottom Section */}
+                              <div className="ticket-bottom-section">
+                                <div className="ticket-bottom-left">
+                                  <div className="ticket-brand-logo">CineVerse</div>
+                                </div>
+                                <div className="ticket-bottom-right">
+                                  <div className="ticket-info-item">
+                                    <span className="ticket-info-label">{booking.seats.length} Ticket(s)</span>
+                                  </div>
+                                  <div className="ticket-info-item">
+                                    <span className="ticket-info-val-large">AUDI 2</span>
+                                  </div>
+                                  <div className="ticket-info-item">
+                                    <span className="ticket-info-seat">
+                                      {seatCategory} - {sortedSeats.join(", ")}
+                                    </span>
+                                  </div>
+                                  <div className="ticket-info-item booking-id-row">
+                                    <span>BOOKING ID: <strong>{booking.ids[0].substring(0, 8).toUpperCase()}</strong></span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Footer Bar */}
+                              <div className="ticket-footer-bar">
+                                <span>Cancellation policy applies to this venue</span>
+                              </div>
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
+                  )}
+                </section>
+              </div>
+            )}
+
+            {activeUserTab === "watchlist" && (
+              <div className="dashboard-container-layout">
+                <section className="trending-section">
+                  <div className="section-header">
+                    <h2>My Watchlist</h2>
+                    <p className="section-subtitle">Movies you plan to watch soon</p>
+                  </div>
+
+                  {watchlist.length === 0 ? (
+                    <div className="empty-bookings-card">
+                      <div className="empty-bookings-icon">★</div>
+                      <p>Your watchlist is empty.</p>
+                      <button className="empty-btn" onClick={() => navigate("/movies")}>
+                        Browse Movies
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="movies-grid">
+                      {watchlist.map((movie) => (
+                        <div key={movie.id} className="movie-card-container">
+                          <MovieCard movie={movie} />
+                          <button 
+                            className="watchlist-btn-overlay in-list"
+                            onClick={() => toggleWatchlist(movie)}
+                            title="Remove from watchlist"
+                          >
+                            ★
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              </div>
+            )}
+
+            {activeUserTab === "reviews" && (
+              <div className="dashboard-container-layout">
+                <section className="reviews-section-panel">
+                  <div className="section-header">
+                    <h2>Movie Reviews & Ratings</h2>
+                    <p className="section-subtitle">Share your cinematic experiences with others</p>
+                  </div>
+
+                  <div className="reviews-dual-layout">
+                    {/* Left Column: Write Review */}
+                    <div className="write-review-card">
+                      <h3>Write a Review</h3>
+                      <form onSubmit={(e) => {
+                        const fd = new FormData(e.currentTarget);
+                        handleAddReview(e, fd.get("movieTitle"), fd.get("rating"), fd.get("comment"));
+                        e.currentTarget.reset();
+                      }}>
+                        <div className="form-group">
+                          <label>Select Movie</label>
+                          <select name="movieTitle" required className="form-select-control">
+                            {movies.map(m => <option key={m.id} value={m.title}>{m.title}</option>)}
+                          </select>
+                        </div>
+                        <div className="form-group">
+                          <label>Rating (Out of 5)</label>
+                          <select name="rating" required className="form-select-control">
+                            <option value="5">★★★★★ (Excellent)</option>
+                            <option value="4">★★★★ (Great)</option>
+                            <option value="3">★★★ (Average)</option>
+                            <option value="2">★★ (Poor)</option>
+                            <option value="1">★ (Terrible)</option>
+                          </select>
+                        </div>
+                        <div className="form-group">
+                          <label>Comments</label>
+                          <textarea name="comment" rows="4" placeholder="What did you think of the cinematography, story, music?" required className="form-textarea-control"></textarea>
+                        </div>
+                        <button type="submit" className="btn-submit-review">Publish Review</button>
+                      </form>
+                    </div>
+
+                    {/* Right Column: Public Reviews list */}
+                    <div className="public-reviews-card">
+                      <h3>Recent User Reviews</h3>
+                      <div className="reviews-feed-container">
+                        {reviews.filter(r => !r.isSpam).map(rev => (
+                          <div key={rev.id} className="review-feed-item">
+                            <div className="review-feed-header">
+                              <span className="review-author">{rev.author}</span>
+                              <span className="review-rating">{"★".repeat(rev.rating)}</span>
+                            </div>
+                            <h4 className="review-movie-target">on {rev.movieTitle}</h4>
+                            <p className="review-comment">"{rev.comment}"</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
+          </div>
         </div>
       )}
 

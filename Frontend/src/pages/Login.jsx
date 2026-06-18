@@ -87,13 +87,25 @@ function Login() {
       
       <div className="login-box">
         <div className="login-header">
+          <div className="login-logo-container">
+            <svg className="login-logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+              <line x1="7" y1="2" x2="7" y2="22" />
+              <line x1="17" y1="2" x2="17" y2="22" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <line x1="2" y1="7" x2="7" y2="7" />
+              <line x1="2" y1="17" x2="7" y2="17" />
+              <line x1="17" y1="17" x2="22" y2="17" />
+              <line x1="17" y1="7" x2="22" y2="7" />
+            </svg>
+          </div>
           <h1>Cine<span className="logo-accent">Verse</span></h1>
           <p className="login-subtitle">Your Ultimate Movie Hub</p>
         </div>
         
         {error && <div className="alert alert-error">{error}</div>}
         {message && <div className="alert alert-success">{message}</div>}
-
+ 
         {mode === "login" && (
           <form onSubmit={handleLogin} className="login-form">
             <h2>Sign In</h2>
@@ -122,7 +134,7 @@ function Login() {
             </div>
           </form>
         )}
-
+ 
         {mode === "register" && (
           <form onSubmit={handleRegister} className="login-form">
             <h2>Sign Up</h2>
@@ -158,22 +170,32 @@ function Login() {
               <label className="input-label">Select Workspace Role</label>
               <div className="role-selector-tiles">
                 <div 
-                  type="button"
                   className={`role-tile ${role === "USER" ? "active" : ""}`}
                   onClick={() => setRole("USER")}
                 >
+                  <svg className="tile-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
                   <span className="tile-label">User</span>
                 </div>
                 <div 
-                  type="button"
                   className={`role-tile ${role === "THEATRE_OWNER" ? "active" : ""}`}
                   onClick={() => setRole("THEATRE_OWNER")}
                 >
+                  <svg className="tile-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+                    <line x1="9" y1="22" x2="9" y2="16" />
+                    <line x1="15" y1="22" x2="15" y2="16" />
+                    <line x1="9" y1="16" x2="15" y2="16" />
+                    <path d="M9 10h6" />
+                    <path d="M9 6h6" />
+                  </svg>
                   <span className="tile-label">Owner</span>
                 </div>
               </div>
             </div>
-
+ 
             {role === "THEATRE_OWNER" && (
               <>
                 <div className="form-group animate-fade-in">
@@ -203,7 +225,7 @@ function Login() {
             </div>
           </form>
         )}
-
+ 
         {mode === "forgot" && (
           <form onSubmit={handleForgotPassword} className="login-form">
             <h2>Forgot Password</h2>
@@ -223,11 +245,11 @@ function Login() {
             </div>
           </form>
         )}
-
+ 
         {mode === "reset" && (
           <form onSubmit={handleResetPassword} className="login-form">
             <h2>Reset Password</h2>
-            <p className="form-desc">Reset password for <strong style={{ color: "#fff" }}>{email}</strong></p>
+            <p className="form-desc">Reset password for <strong style={{ color: "var(--text-main)", fontWeight: "bold" }}>{email}</strong></p>
             <div className="form-group">
               <input
                 type="password"

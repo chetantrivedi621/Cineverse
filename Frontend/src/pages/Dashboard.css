@@ -221,7 +221,7 @@
 .form-select-control, .form-textarea-control {
   width: 100%;
   padding: 12px;
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: var(--bg-main);
   border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--text-main);
@@ -302,7 +302,7 @@
 
 .owner-sidebar-nav, .admin-sidebar-nav {
   width: 270px;
-  background-color: #09090b;
+  background-color: var(--bg-card);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -378,8 +378,8 @@
 }
 
 .sidebar-btn:hover {
-  background-color: rgba(255, 255, 255, 0.02);
-  color: white;
+  background-color: var(--bg-card-hover);
+  color: var(--text-main);
   transform: translateX(6px);
 }
 
@@ -392,7 +392,7 @@
 .sidebar-btn.active {
   background: linear-gradient(90deg, rgba(229, 9, 20, 0.15) 0%, rgba(229, 9, 20, 0.02) 100%);
   border-left-color: var(--primary);
-  color: white;
+  color: var(--text-main);
   font-weight: 700;
   box-shadow: inset 3px 0 10px rgba(229, 9, 20, 0.05);
 }
@@ -415,7 +415,7 @@
 .owner-content-header h1, .admin-content-header h1 {
   font-size: 2.2rem;
   font-weight: 900;
-  color: white;
+  color: var(--text-main);
 }
 
 .owner-content-header p, .admin-content-header p {
@@ -457,7 +457,7 @@
 }
 
 .stat-card-item {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.04) 100%);
+  background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 28px 24px;
@@ -468,7 +468,7 @@
   position: relative;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-sm);
   backdrop-filter: blur(8px);
 }
 
@@ -479,13 +479,13 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+  background: radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.01) 0%, transparent 50%);
   pointer-events: none;
 }
 
 .stat-card-item:hover {
   transform: translateY(-6px);
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--border-focus);
 }
 
 .stat-card-item.purple:hover { box-shadow: 0 16px 40px rgba(156, 39, 176, 0.18); border-color: rgba(156, 39, 176, 0.4); }
@@ -515,7 +515,7 @@
 }
 
 .stat-icon-wrapper {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-main);
   width: 42px;
   height: 42px;
   border-radius: 10px;
@@ -523,7 +523,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
 }
 
 .stat-card-icon {
@@ -573,7 +573,7 @@
 .stat-num {
   font-size: 2.1rem;
   font-weight: 800;
-  color: white;
+  color: var(--text-main);
   letter-spacing: -0.5px;
 }
 
@@ -612,7 +612,7 @@
   font-size: 1.15rem;
   font-weight: 800;
   margin: 0 0 20px;
-  color: white;
+  color: var(--text-main);
   border-bottom: 1px solid var(--border);
   padding-bottom: 10px;
 }
@@ -674,11 +674,11 @@
 
 .progress-bar-container {
   height: 10px;
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: var(--bg-main);
   border-radius: 6px;
   overflow: hidden;
   position: relative;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .bar-fill {
@@ -732,7 +732,7 @@
 .pop-movie-row {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.01);
+  background-color: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 16px 20px;
@@ -741,10 +741,10 @@
 }
 
 .pop-movie-row:hover {
-  background-color: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--bg-card-hover);
+  border-color: var(--border-focus);
   transform: translateX(4px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 .pop-rank {
@@ -2195,4 +2195,188 @@
   font-weight: 600;
   letter-spacing: 0.2px;
   border-top: 1px solid #eef0f2;
+}
+
+/* ================= USER SIDEBAR LAYOUT ================= */
+.user-dashboard-wrapper {
+  display: flex;
+  min-height: calc(100vh - 112px);
+  background-color: var(--bg-main);
+  transition: all 0.3s ease;
+}
+
+.user-sidebar-nav {
+  width: 270px;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 18px;
+  gap: 10px;
+  position: relative;
+  transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), padding 0.3s ease;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.user-sidebar-nav.collapsed {
+  width: 76px;
+  padding: 30px 10px;
+  align-items: center;
+}
+
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 30px;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  transition: transform 0.3s ease, background-color 0.2s ease;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.1);
+}
+
+.user-sidebar-nav.collapsed .sidebar-toggle-btn {
+  right: -12px;
+}
+
+.user-sidebar-nav .sidebar-label {
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.user-sidebar-nav.collapsed .sidebar-label {
+  display: none;
+  opacity: 0;
+}
+
+/* User sidebar buttons & active states */
+.user-sidebar-nav .sidebar-btn {
+  position: relative;
+  width: 100%;
+}
+
+.user-sidebar-nav.collapsed .sidebar-btn {
+  justify-content: center;
+  padding: 14px 0;
+}
+
+/* Badge counts on sidebar items */
+.sidebar-badge {
+  background-color: var(--primary);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: auto;
+  min-width: 18px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(229, 9, 20, 0.2);
+}
+
+.sidebar-badge.collapsed {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  margin-left: 0;
+  padding: 1px 5px;
+  font-size: 0.65rem;
+  border: 1px solid var(--bg-card);
+}
+
+/* User Main Content Area styling */
+.user-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: var(--bg-main);
+  transition: all 0.3s ease;
+}
+
+/* Ensure margins on Spotlight banner inside layout */
+.user-main-content .hero-section {
+  width: 100%;
+  margin-top: 0;
+}
+
+/* Adjust Dashboard container layout padding when in sidebar mode */
+.user-main-content .dashboard-container-layout {
+  padding: 40px;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0;
+}
+
+/* Responsive adjustment for Mobile User Sidebar */
+@media (max-width: 768px) {
+  .user-dashboard-wrapper {
+    flex-direction: column;
+  }
+  
+  .user-sidebar-nav {
+    width: 100% !important;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    flex-direction: row;
+    padding: 10px 16px;
+    gap: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+    justify-content: space-around;
+  }
+  
+  .user-sidebar-nav.collapsed {
+    padding: 10px 16px;
+  }
+  
+  .user-sidebar-nav .sidebar-toggle-btn {
+    display: none;
+  }
+  
+  .user-sidebar-nav .sidebar-brand {
+    display: none;
+  }
+  
+  .user-sidebar-nav .sidebar-btn {
+    width: auto;
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  
+  .user-sidebar-nav .sidebar-label {
+    display: inline !important;
+    font-size: 0.85rem;
+  }
+  
+  .sidebar-badge {
+    margin-left: 4px;
+    position: static !important;
+  }
+  
+  .user-main-content {
+    padding: 0;
+  }
+
+  .user-main-content .dashboard-container-layout {
+    padding: 24px 16px;
+  }
 }

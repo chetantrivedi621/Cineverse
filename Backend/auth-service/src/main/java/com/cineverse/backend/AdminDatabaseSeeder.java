@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DatabaseSeeder implements CommandLineRunner {
+public class AdminDatabaseSeeder implements CommandLineRunner {
 
     @Autowired
     private UserRepository userRepository;
@@ -28,6 +28,17 @@ public class DatabaseSeeder implements CommandLineRunner {
             );
             userRepository.save(admin);
             System.out.println("Seeded admin user: gagkaur274@gmail.com");
+        }
+
+        if (!userRepository.existsByEmail("chetantrivedi930@gmail.com")) {
+            User admin2 = new User(
+                "chetan",
+                "chetantrivedi930@gmail.com",
+                passwordEncoder.encode("Chetan65*"),
+                "ADMIN"
+            );
+            userRepository.save(admin2);
+            System.out.println("Seeded admin user: chetantrivedi930@gmail.com");
         }
     }
 }

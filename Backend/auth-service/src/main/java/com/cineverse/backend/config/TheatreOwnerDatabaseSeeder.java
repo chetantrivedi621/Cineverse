@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class DatabaseSeeder implements ApplicationRunner {
+public class TheatreOwnerDatabaseSeeder implements ApplicationRunner {
 
     @Autowired
     private UserRepository userRepository;

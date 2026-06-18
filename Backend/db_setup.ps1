@@ -1,6 +1,6 @@
 Write-Host "Setting up portable PostgreSQL..."
 
-$BaseDir = "d:\Downloads\CineVerse\Backend"
+$BaseDir = $PSScriptRoot
 $ZipPath = "$BaseDir\postgres.zip"
 $PgsqlDir = "$BaseDir\pgsql"
 $DataDir = "$BaseDir\pgdata"

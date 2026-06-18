@@ -1,1 +1,1 @@
-& "d:\Downloads\CineVerse\Backend\pgsql\bin\pg_ctl.exe" -D "d:\Downloads\CineVerse\Backend\pgdata" -l "d:\Downloads\CineVerse\Backend\pglog.txt" start
+& "C:\Users\Asus\Downloads\CineVerse (1)\CineVerse\Backend\pgsql\bin\pg_ctl.exe" -D "C:\Users\Asus\Downloads\CineVerse (1)\CineVerse\Backend\pgdata" -l "C:\Users\Asus\Downloads\CineVerse (1)\CineVerse\Backend\pglog.txt" start

@@ -62,31 +62,17 @@ if ($userRegRes) {
     }
 }
 
-Write-Host "`n2. Registering THEATRE_OWNER role user (owner@example.com)..."
-$regOwnerBody = @{
-    name = "Theatre Owner"
-    email = "owner@example.com"
-    password = "password123"
-    role = "THEATRE_OWNER"
+Write-Host "`n2. Logging in as pre-seeded, approved THEATRE_OWNER (elante@gmail.com)..."
+$loginBody = @{
+    email = "elante@gmail.com"
+    password = "elante"
 }
-$ownerRegRes = Invoke-PostJson "$baseUrl/auth/register" $regOwnerBody
-
-if ($ownerRegRes) {
-    Write-Host "OWNER Registered Successfully! Token acquired." -ForegroundColor Green
-    $ownerToken = $ownerRegRes.token
+$loginRes = Invoke-PostJson "$baseUrl/auth/login" $loginBody
+if ($loginRes) {
+    $ownerToken = $loginRes.token
+    Write-Host "OWNER Login Successful! Token acquired." -ForegroundColor Green
 } else {
-    Write-Host "OWNER Registration failed or user already exists. Attempting Login..." -ForegroundColor Yellow
-    $loginBody = @{
-        email = "owner@example.com"
-        password = "password123"
-    }
-    $loginRes = Invoke-PostJson "$baseUrl/auth/login" $loginBody
-    if ($loginRes) {
-        $ownerToken = $loginRes.token
-        Write-Host "OWNER Login Successful! Token acquired." -ForegroundColor Green
-    } else {
-        Write-Host "OWNER Login failed!" -ForegroundColor Red
-    }
+    Write-Host "OWNER Login failed!" -ForegroundColor Red
 }
 
 Write-Host "`n--- Testing Role-Based Access Control (RBAC) ---" -ForegroundColor Cyan
