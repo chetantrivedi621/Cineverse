@@ -2,27 +2,27 @@
   "rewrites": [
     {
       "source": "/api/auth/:path*",
-      "destination": "https://cineverse-auth-service-baz5.onrender.com"
+      "destination": "https://cineverse-auth-service-baz5.onrender.com/api/auth/:path*"
     },
     {
       "source": "/api/users/:path*",
-      "destination": "https://cineverse-auth-service-baz5.onrender.com"
+      "destination": "https://cineverse-auth-service-baz5.onrender.com/api/users/:path*"
     },
     {
       "source": "/api/movies/:path*",
-      "destination": "https://cineverse-movie-service-h3x8.onrender.com"
+      "destination": "https://cineverse-movie-service-h3x8.onrender.com/api/movies/:path*"
     },
     {
       "source": "/api/bookings/:path*",
-      "destination": "https://cineverse-movie-service-h3x8.onrender.com"
+      "destination": "https://cineverse-movie-service-h3x8.onrender.com/api/bookings/:path*"
     },
     {
       "source": "/api/shows/:path*",
-      "destination": "https://cineverse-auth-service-baz5.onrender.com"
+      "destination": "https://cineverse-auth-service-baz5.onrender.com/api/shows/:path*"
     },
     {
       "source": "/api/tickets/:path*",
-      "destination": "https://cineverse-auth-service-baz5.onrender.com"
+      "destination": "https://cineverse-auth-service-baz5.onrender.com/api/tickets/:path*"
     },
     {
       "source": "/(.*)",
