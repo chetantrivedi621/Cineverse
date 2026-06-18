@@ -13,11 +13,10 @@ This guide outlines the step-by-step procedure to deploy the CineVerse applicati
 4. Set up database security:
    - Create a database user (e.g., `cineuser`) and generate a secure password. Keep this password safe.
    - Set the IP Access List to allow access from anywhere (`0.0.0.0/0`) since Render web service IPs can change dynamically.
-5. In your cluster view, click **Connect** -> **Drivers** -> Copy the connection URI:
+5. Your custom MongoDB connection URI has been set up below (pre-formatted with the `cineverse` catalog name):
    ```text
-   mongodb+srv://cineuser:<password>@cluster0.xxxx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+   mongodb+srv://chetantrivedi930_db_user:AQt48eVdKezVJZXa@cluster0.7tsneur.mongodb.net/cineverse?retryWrites=true&w=majority&appName=Cluster0
    ```
-   *(Replace `<password>` with your database user's password).*
 
 ### B. PostgreSQL Database (for Authentication & Role Management)
 You have provisioned your PostgreSQL database on Render. Here are your credentials pre-formatted for Spring Boot deployment:
@@ -69,7 +68,7 @@ This service handles movies, showtimes, seats, and bookings.
      - **Build Command**: `chmod +x mvnw && ./mvnw clean package -DskipTests`
      - **Start Command**: `java -jar target/movie-service-0.0.1-SNAPSHOT.jar`
 4. Click **Advanced** and add the following **Environment Variables**:
-   - `MONGO_URI`: Your MongoDB Atlas connection URI string (e.g., `mongodb+srv://cineuser:<password>@cluster0.xxxx.mongodb.net/cineverse?retryWrites=true&w=majority`)
+   - `MONGO_URI`: Your MongoDB Atlas connection URI string (`mongodb+srv://chetantrivedi930_db_user:AQt48eVdKezVJZXa@cluster0.7tsneur.mongodb.net/cineverse?retryWrites=true&w=majority&appName=Cluster0`)
    - `JWT_SECRET`: *Must be the exact same JWT secret key used in the auth-service.*
 5. Click **Create Web Service**.
 
